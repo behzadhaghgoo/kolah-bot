@@ -2,11 +2,20 @@
 # Assuming that player ids are unique.
 
 import numpy as np
+import mongoengine
 
-class Team():
-    def __init__(self, players):
-        self.players = players
-        self.score = 0
+
+class Team(mongoengine.EmbeddedDocument):
+    players = mongoengine.ListField(mongoengine.StringField())
+    score = mongoengine.IntField(default=0)
+
+
+class Game(mongoengine.document):
+    players = mongoengine.ListField(mongoengine.StringField(), default=list)
+    teams = mongoengine.EmbeddedDocumentListField(Team, default=list)
+    words = mongoengine.ListField(mongoengine.StringField(), default=list)
+    remaining_words = mongoengine.ListField(mongoengine.StringField(), default=list)
+
 
 class Player():
     def __init__(self, identifier, turn_func, input_func):
@@ -15,15 +24,17 @@ class Player():
         self.turn_func = turn_func
         self.input_func = input_func
 
-class Game():
-    def __init__(self):
-        self.players = []
-        self.teams = []
-        self.words = set()
-        self.remaining_words = self.words
-        self.current_player_ind = 0
 
-    def add_player(self, player_id):
+class GameManager:
+
+    @staticmethod
+    def create_game(self):
+        game = Game()
+        game.save()
+        return game.id
+
+    @staticmethod
+    def add_player(game, player_id):
         """
         Works both with a list or single input
         """
@@ -33,42 +44,51 @@ class Game():
             player_ids = [player_id]
 
         for player_id in player_ids:
-            if player_id not in self.players:
-                self.players.append(Player(player_id))
+            if player_id not in game.players:
+                game.players.append(player_id)
+        game.save()
 
-    def add_words(self, words):
+    @staticmethod
+    def add_words(game, words):
         """
         Works both with a list or a single input
         """
         if not isinstance(words, list):
             words = [words]
         for word in words:
-            self.words.add(word)
+            game.words.append(word)
 
-        self.remaining_words = self.words
+        game.save()
 
-    def assign_teams(self):
-        team_assignments = np.random.permutation(self.players).reshape((-1,2))
+    @staticmethod
+    def assign_teams(game):
+        team_assignments = np.random.permutation(game.players).reshape((-1, 2))
         # Reorder players
-        self.players = team_assignments.T.reshape(-1)
+        game.players = team_assignments.T.reshape(-1)
         for team_assignment in team_assignments:
             curr_team = Team(team_assignment)
-            self.teams.append(curr_team)
-            print(team_assignment)
-            team_assignment[0].team = curr_team
-            team_assignment[1].team = curr_team
+            game.teams.append(curr_team)
+        game.save()
 
-    def get_random_word(self):
-        current_word = np.random.choice(list(self.words))
+    @staticmethod
+    def get_random_word(game):
+        current_word = np.random.choice(list(game.remaining_words))
         return current_word
 
-    def reset(self):
-        self.remaining_words = self.words
+    @staticmethod
+    def reset(game):
+        game.remaining_words = game.words
+        game.save()
 
-    def round_result(self, success, word, player):
+    @staticmethod
+    def round_result(game, success, word, player):
         """
         Success (bool)
         """
         if success:
-            self.remaining_words.remove(word)
-            self.players[self.current_player_ind].team.score += 1
+            game.remaining_words.remove(word)
+            for index in range(len(game.teams)):
+                if player in game.teams[index].players:
+                    game.teams[index].score += 1
+            game.save()
+
