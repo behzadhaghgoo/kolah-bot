@@ -1,5 +1,5 @@
 import random
-from game.game import Game
+from bot.models.game import Game
 
 games = dict()
 creators = dict()
@@ -27,7 +27,6 @@ def create(update, context):
     game_id = create_new_game()
     creator_id = update.effective_chat.id
     creators[game_id] = creator_id
-    print(creator_id)
-    games[game_id].add_player([creator_id])
-    print("ha?")
+    # games[game_id].add_player([creator_id])
+    # print("ha?")
     context.bot.send_message(chat_id=creator_id, text=reply_message % game_id)
