@@ -1,8 +1,5 @@
 import random
-from bot.models.game import Game
-
-games = dict()
-creators = dict()
+from bot.models.game import GameManager
 
 reply_message = """
 یه بازی جدید ساخته شد، برای اینکه باقی بچه‌ها هم جوین بشن، این لینک رو باهاشون به اشتراک بذار ;)
@@ -10,23 +7,7 @@ https://telegram.me/kolah_game_bot?join=%s
 """
 
 
-def get_random_id():
-    return str(random.randint(10000, 99999))
-
-
-def create_new_game():
-    game_id = get_random_id()
-    while game_id in games:
-        game_id = get_random_id()
-
-    games[game_id] = Game()
-    return game_id
-
-
 def create(update, context):
-    game_id = create_new_game()
-    creator_id = update.effective_chat.id
-    creators[game_id] = creator_id
-    # games[game_id].add_player([creator_id])
-    # print("ha?")
+    creator_id = str(update.effective_chat.id)
+    game_id = GameManager.create_game(creator_id)
     context.bot.send_message(chat_id=creator_id, text=reply_message % game_id)

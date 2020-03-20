@@ -10,26 +10,23 @@ class Team(mongoengine.EmbeddedDocument):
     score = mongoengine.IntField(default=0)
 
 
-class Game(mongoengine.document):
+class Game(mongoengine.Document):
     players = mongoengine.ListField(mongoengine.StringField(), default=list)
     teams = mongoengine.EmbeddedDocumentListField(Team, default=list)
     words = mongoengine.ListField(mongoengine.StringField(), default=list)
     remaining_words = mongoengine.ListField(mongoengine.StringField(), default=list)
-
-
-class Player():
-    def __init__(self, identifier, turn_func, input_func):
-        self.id = identifier
-        self.team = None
-        self.turn_func = turn_func
-        self.input_func = input_func
+    creator_id = mongoengine.StringField(required=True)
+    status = mongoengine.StringField(default="Active")
 
 
 class GameManager:
 
     @staticmethod
-    def create_game(self):
-        game = Game()
+    def create_game(creator_id):
+        games = Game.objects(creator_id=creator_id, status="Active")
+        if len(games):
+            return games[0].id
+        game = Game(creator_id=creator_id)
         game.save()
         return game.id
 
