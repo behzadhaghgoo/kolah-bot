@@ -1,7 +1,7 @@
 from telegram.ext import Updater, CommandHandler
 
 from config import TELEGRAM_BOT_TOKEN
-from handlers import start
+from handlers.start import start
 
 updater = Updater(TELEGRAM_BOT_TOKEN, use_context=True)
 dispatcher = updater.dispatcher
