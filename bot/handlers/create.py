@@ -1,9 +1,8 @@
-import random
 from bot.models.game import GameManager
 
 reply_message = """
 یه بازی جدید ساخته شد، برای اینکه باقی بچه‌ها هم جوین بشن، این لینک رو باهاشون به اشتراک بذار ;)
-https://telegram.me/kolah_game_bot?join=%s
+http://t.me/kolah_game_bot?start=%s
 """
 
 

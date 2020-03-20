@@ -25,10 +25,10 @@ class GameManager:
     def create_game(creator_id):
         games = Game.objects(creator_id=creator_id, status="Active")
         if len(games):
-            return games[0].id
+            return str(games[0].id)
         game = Game(creator_id=creator_id)
         game.save()
-        return game.id
+        return str(game.id)
 
     @staticmethod
     def add_player(game, player_id):
