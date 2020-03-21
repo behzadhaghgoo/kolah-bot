@@ -6,16 +6,16 @@ import mongoengine
 
 
 class Team(mongoengine.EmbeddedDocument):
-    players = mongoengine.ListField(mongoengine.StringField())
+    players = mongoengine.ListField(mongoengine.IntField())
     score = mongoengine.IntField(default=0)
 
 
 class Game(mongoengine.Document):
-    players = mongoengine.ListField(mongoengine.StringField(), default=list)
+    players = mongoengine.ListField(mongoengine.IntField(), default=list)
     teams = mongoengine.EmbeddedDocumentListField(Team, default=list)
     words = mongoengine.ListField(mongoengine.StringField(), default=list)
     remaining_words = mongoengine.ListField(mongoengine.StringField(), default=list)
-    creator_id = mongoengine.StringField(required=True)
+    creator_id = mongoengine.IntField(required=True)
     status = mongoengine.StringField(default="Active")
 
 

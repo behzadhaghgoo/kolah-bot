@@ -7,6 +7,7 @@ http://t.me/kolah_game_bot?start=%s
 
 
 def create(update, context):
-    creator_id = str(update.effective_chat.id)
+    creator_id = update.effective_chat.id
     game_id = GameManager.create_game(creator_id)
+    GameManager.add_player(game_id, creator_id)
     context.bot.send_message(chat_id=creator_id, text=reply_message % game_id)
