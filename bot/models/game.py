@@ -22,6 +22,13 @@ class Game(mongoengine.Document):
 class GameManager:
 
     @staticmethod
+    def get_game(game_id):
+        games = Game.objects(id=game_id)
+        if len(games) == 0:
+            return None
+        return games[0]
+
+    @staticmethod
     def create_game(creator_id):
         games = Game.objects(creator_id=creator_id, status="Active")
         if len(games):
@@ -35,27 +42,34 @@ class GameManager:
         """
         Works both with a list or single input
         """
+        if isinstance(game, str):
+            game = GameManager.get_game(game)
+            if game is None:
+                return False
         if isinstance(player_id, list):
             player_ids = player_id
         else:
             player_ids = [player_id]
 
         for player_id in player_ids:
-            if player_id not in game.players:
-                game.players.append(player_id)
-        game.save()
+            game.update(add_to_set__players=player_id)
+        return True
 
     @staticmethod
     def add_words(game, words):
         """
         Works both with a list or a single input
         """
+        if isinstance(game, str):
+            game = GameManager.get_game(game)
+            if game is None:
+                return False
+
         if not isinstance(words, list):
             words = [words]
         for word in words:
-            game.words.append(word)
-
-        game.save()
+            game.update(add_to_set_words=word)
+        return True
 
     @staticmethod
     def assign_teams(game):

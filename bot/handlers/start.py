@@ -1,4 +1,5 @@
 from bot.models.player import Player
+from bot.models.game import GameManager
 
 start_text = """
 سلام! خوش اومدی، راستش این دکمه استارت کار خاصی نمی‌کنه، فقط کمک میکنه که باهات آشنا شم ;)
@@ -10,6 +11,10 @@ already_joined_text = """
 عزیز دلِ، شما که قبلا عضو شدی :))))
 """
 
+join_game_text = """
+شما به بازی اضافه شدید.
+"""
+
 
 def start(update, context):
     chat_id = update.effective_chat.id
@@ -18,8 +23,13 @@ def start(update, context):
     if len(players) != 0:
         players[0].name = name
         players[0].save()
-        context.bot.send_message(chat_id=chat_id, text=already_joined_text)
-        return
-    new_player = Player(chat_id=chat_id, name=name)
-    new_player.save()
-    context.bot.send_message(chat_id=chat_id, text=start_text)
+    else:
+        new_player = Player(chat_id=chat_id, name=name)
+        new_player.save()
+        context.bot.send_message(chat_id=chat_id, text=start_text)
+
+    if len(context.args):
+        game_id = context.args[0]
+        result = GameManager.add_player(game_id, chat_id)
+        if result:
+            context.bot.send_message(chat_id=chat_id, text=join_game_text)
