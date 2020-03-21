@@ -18,6 +18,8 @@ def update_message(telegram_bot, player, text):
 
 
 def update_statuses(telegram_bot, game):
+    print("salam")
+    print("game.status = {}".format(game.status))
     players = Player.objects(chat_id__in=game.players)
     players_dict = dict()
     for player in players:
@@ -37,9 +39,12 @@ def update_statuses(telegram_bot, game):
         for player in players:
             update_message(telegram_bot, player, teams_str)
             
-
     if game.status == "Getting Words":
-        pass
+        print("game.status == 'Getting Words'")
+        message = """کلمه وارد کن گل من
+         {} کلمه وارد شده تا الان""".format(len(game.words))
+        for player in players:
+            update_message(telegram_bot, player, message)
 
     if game.status == "Done":
         pass

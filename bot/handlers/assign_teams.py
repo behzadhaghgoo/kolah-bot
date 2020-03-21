@@ -8,6 +8,7 @@ def assign_teams(update, context):
     print(update.__dict__)
     games = Game.objects(creator_id=update.effective_chat.id, status__ne="Finished")
     if len(games) != 1:
+        print("len(games) = {}".format(len(games)))
         return
     game = games[0]
     GameManager.assign_teams(game)

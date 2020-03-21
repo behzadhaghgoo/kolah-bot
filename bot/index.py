@@ -5,6 +5,7 @@ from .config import TELEGRAM_BOT_TOKEN
 from .handlers.start import start
 from .handlers.create import create
 from .handlers.assign_teams import assign_teams
+from .handlers.start_getting_words import start_getting_words
 
 
 def run():
@@ -20,6 +21,11 @@ def run():
 
     assign_teams_handler = CommandHandler('assign_teams', assign_teams)
     dispatcher.add_handler(assign_teams_handler)
+
+    start_getting_words_handler = CommandHandler('start_getting_words', start_getting_words)
+    dispatcher.add_handler(start_getting_words_handler)
+
+
 
     # /start_getting_words -> can submitted by game creator only
     # /assign_teams -> creator only, show the teams afterwards
