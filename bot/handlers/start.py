@@ -1,3 +1,4 @@
+from bot.helpers import update_statuses
 from bot.models.player import Player
 from bot.models.game import GameManager
 
@@ -18,7 +19,7 @@ join_game_text = """
 
 def start(update, context):
     chat_id = update.effective_chat.id
-    name = update.effective_chat.first_name + " " + update.effective_chat.last_name
+    name = str(update.effective_chat.first_name) + " " + str(update.effective_chat.last_name)
     players = Player.objects(chat_id=chat_id)
     if len(players) != 0:
         players[0].name = name
@@ -30,7 +31,8 @@ def start(update, context):
 
     if len(context.args):
         game_id = context.args[0]
-        result = GameManager.add_player(game_id, chat_id)
+        result, game = GameManager.add_player(game_id, chat_id)
         if result:
             message = context.bot.send_message(chat_id=chat_id, text=join_game_text)
             Player.objects(chat_id=chat_id).update_one(status_message_id=message.message_id)
+            update_statuses(context.bot, game)

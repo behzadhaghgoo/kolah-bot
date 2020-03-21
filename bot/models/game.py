@@ -16,7 +16,7 @@ class Game(mongoengine.Document):
     words = mongoengine.ListField(mongoengine.StringField(), default=list)
     remaining_words = mongoengine.ListField(mongoengine.StringField(), default=list)
     creator_id = mongoengine.IntField(required=True)
-    status = mongoengine.StringField(default="Active")
+    status = mongoengine.StringField(default="Joining")
 
 
 class GameManager:
@@ -30,7 +30,7 @@ class GameManager:
 
     @staticmethod
     def create_game(creator_id):
-        games = Game.objects(creator_id=creator_id, status="Active")
+        games = Game.objects(creator_id=creator_id, status__ne="Finished")
         if len(games):
             return str(games[0].id)
         game = Game(creator_id=creator_id)
@@ -45,7 +45,7 @@ class GameManager:
         if isinstance(game, str):
             game = GameManager.get_game(game)
             if game is None:
-                return False
+                return False, None
         if isinstance(player_id, list):
             player_ids = player_id
         else:
@@ -53,7 +53,7 @@ class GameManager:
 
         for player_id in player_ids:
             game.update(add_to_set__players=player_id)
-        return True
+        return True, game
 
     @staticmethod
     def add_words(game, words):
