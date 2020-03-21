@@ -63,7 +63,7 @@ class GameManager:
         if isinstance(game, str):
             game = GameManager.get_game(game)
             if game is None:
-                return False
+                return False, None
 
         if not isinstance(words, list):
             words = [words]
@@ -71,15 +71,24 @@ class GameManager:
             game.update(add_to_set_words=word)
         return True
 
+
+    # TODO: fix odd players edge-case.
     @staticmethod
     def assign_teams(game):
+        print("assign_teams started", game.__dict__)
+        if isinstance(game, str):
+            game = GameManager.get_game(game)
+            if game is None:
+                return None
         team_assignments = np.random.permutation(game.players).reshape((-1, 2))
         # Reorder players
-        game.players = team_assignments.T.reshape(-1)
+        game.update(set__players = team_assignments.T.reshape(-1))
+        game.update(set__teams=list())
         for team_assignment in team_assignments:
-            curr_team = Team(team_assignment)
-            game.teams.append(curr_team)
-        game.save()
+            curr_team = Team(players=team_assignment)
+            game.update(push__teams=curr_team)
+            print(curr_team.__dict__, curr_team.players)
+        return game
 
     @staticmethod
     def get_random_word(game):
