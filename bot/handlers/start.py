@@ -32,4 +32,5 @@ def start(update, context):
         game_id = context.args[0]
         result = GameManager.add_player(game_id, chat_id)
         if result:
-            context.bot.send_message(chat_id=chat_id, text=join_game_text)
+            message = context.bot.send_message(chat_id=chat_id, text=join_game_text)
+            Player.objects(chat_id=chat_id).update_one(status_message_id=message.message_id)
