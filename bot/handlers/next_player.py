@@ -26,6 +26,8 @@ def next_player(update, context):
     print("be sagheye")
     update_statuses(context.bot, game)
 
+    context.bot.delete_message(chat_id, update.message.message_id)
+
 
 
 def prev_player(update, context):
@@ -51,3 +53,5 @@ def prev_player(update, context):
     game.reload()
     print("be sagheye")
     update_statuses(context.bot, game)
+
+    context.bot.delete_message(chat_id, update.message.message_id)

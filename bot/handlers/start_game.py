@@ -29,3 +29,5 @@ def start_game(update, context):
     update_statuses(context.bot, game)
     print("sabooye may shekastam")
     # game.active_player_index = (game.active_player_index + 1) % len(game.players)
+
+    context.bot.delete_message(chat_id, update.message.message_id)

@@ -13,3 +13,5 @@ def add_word(update, context):
     print(word, game)
     game = GameManager.add_words(game, word)
     update_statuses(context.bot, game)
+
+    context.bot.delete_message(chat_id, update.message.message_id)

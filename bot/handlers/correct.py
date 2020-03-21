@@ -27,3 +27,4 @@ def correct(update, context):
     game.reload()
     update_statuses(context.bot, game)
 
+    context.bot.delete_message(chat_id, update.message.message_id)

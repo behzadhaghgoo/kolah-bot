@@ -1,4 +1,4 @@
-from bot.helpers import update_statuses
+from bot.helpers import update_statuses, update_message
 from bot.models.player import Player
 from bot.models.game import GameManager
 
@@ -27,10 +27,12 @@ def start(update, context):
     else:
         new_player = Player(chat_id=chat_id, name=name)
         new_player.save()
-        context.bot.send_message(chat_id=chat_id, text=start_text)
+        update_message(context.bot, new_player, text=start_text)
 
     if len(context.args):
         game_id = context.args[0]
         result, game = GameManager.add_player(game_id, chat_id)
         if result:
             update_statuses(context.bot, game)
+
+    # context.bot.delete_message(chat_id, update.message.message_id)

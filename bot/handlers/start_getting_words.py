@@ -13,3 +13,5 @@ def start_getting_words(update, context):
     game.status = "Getting Words"
     game.save()
     update_statuses(context.bot, game)
+
+    context.bot.delete_message(chat_id, update.message.message_id)

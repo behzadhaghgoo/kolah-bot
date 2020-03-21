@@ -64,5 +64,9 @@ def update_statuses(telegram_bot, game):
                 update_message(telegram_bot, player, message + special_message)
         pass
 
-    if game.status == "Done":
+    if game.status == "Finished":
+        
+        for player in players:
+            update_message(telegram_bot, player, "be payan amad in daftar, hekayat hamchenan baghist")
         pass
+    

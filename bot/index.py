@@ -11,6 +11,7 @@ from .handlers.get_status import get_status
 from .handlers.start_game import start_game
 from .handlers.correct import correct
 from .handlers.next_player import next_player, prev_player
+from .handlers.finish import finish
 
 def run():
     mongoengine.connect('kolah')
@@ -27,6 +28,7 @@ def run():
     dispatcher.add_handler(CommandHandler('correct', correct))
     dispatcher.add_handler(CommandHandler('next_player', next_player))
     dispatcher.add_handler(CommandHandler('prev_player', prev_player))
+    dispatcher.add_handler(CommandHandler('finish', finish))
     
 
 
