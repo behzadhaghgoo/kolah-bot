@@ -6,8 +6,6 @@ joining_status = """
 %s
 """
 
-
-
 def update_message(telegram_bot, player, text):
     if player.status_message_id is None:
         print("creating new message")

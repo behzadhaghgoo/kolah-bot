@@ -9,32 +9,26 @@ from .handlers.start_getting_words import start_getting_words
 from .handlers.add_word import add_word
 from .handlers.get_status import get_status
 from .handlers.start_game import start_game
+from .handlers.correct import correct
+from .handlers.next_player import next_player, prev_player
 
 def run():
     mongoengine.connect('kolah')
     updater = Updater(TELEGRAM_BOT_TOKEN, use_context=True)
     dispatcher = updater.dispatcher
 
-    start_handler = CommandHandler('start', start)
-    dispatcher.add_handler(start_handler)
+    dispatcher.add_handler(CommandHandler('start', start))
+    dispatcher.add_handler(CommandHandler('new', create))
+    dispatcher.add_handler(CommandHandler('assign_teams', assign_teams))
+    dispatcher.add_handler(CommandHandler('start_getting_words', start_getting_words))
+    dispatcher.add_handler(CommandHandler('add_word', add_word))
+    dispatcher.add_handler(CommandHandler('get_status', get_status))    
+    dispatcher.add_handler(CommandHandler('start_game', start_game))
+    dispatcher.add_handler(CommandHandler('correct', correct))
+    dispatcher.add_handler(CommandHandler('next_player', next_player))
+    dispatcher.add_handler(CommandHandler('prev_player', prev_player))
+    
 
-    create_handler = CommandHandler('new', create)
-    dispatcher.add_handler(create_handler)
-
-    assign_teams_handler = CommandHandler('assign_teams', assign_teams)
-    dispatcher.add_handler(assign_teams_handler)
-
-    start_getting_words_handler = CommandHandler('start_getting_words', start_getting_words)
-    dispatcher.add_handler(start_getting_words_handler)
-
-    add_word_handler = CommandHandler('add_word', add_word)
-    dispatcher.add_handler(add_word_handler)
-
-    get_status_handler = CommandHandler('get_status', get_status)
-    dispatcher.add_handler(get_status_handler)
-
-    start_game_handler = CommandHandler('start_game', start_game)
-    dispatcher.add_handler(start_game_handler)
 
 
     # /start_getting_words -> can submitted by game creator only

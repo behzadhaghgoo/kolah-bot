@@ -100,6 +100,7 @@ class GameManager:
         current_word = np.random.choice(list(game.remaining_words))
         game.current_word = current_word
         game.save()
+        game.reload()
         return current_word
 
     @staticmethod
