@@ -6,7 +6,8 @@ from .handlers.start import start
 from .handlers.create import create
 from .handlers.assign_teams import assign_teams
 from .handlers.start_getting_words import start_getting_words
-
+from .handlers.add_word import add_word
+from .handlers.get_status import get_status
 
 def run():
     mongoengine.connect('kolah')
@@ -25,6 +26,11 @@ def run():
     start_getting_words_handler = CommandHandler('start_getting_words', start_getting_words)
     dispatcher.add_handler(start_getting_words_handler)
 
+    add_word_handler = CommandHandler('add_word', add_word)
+    dispatcher.add_handler(add_word_handler)
+
+    get_status_handler = CommandHandler('get_status', get_status)
+    dispatcher.add_handler(get_status_handler)
 
 
     # /start_getting_words -> can submitted by game creator only

@@ -60,16 +60,19 @@ class GameManager:
         """
         Works both with a list or a single input
         """
+        print("add words")
         if isinstance(game, str):
             game = GameManager.get_game(game)
             if game is None:
-                return False, None
-
+                return None
+        print("dorood")
         if not isinstance(words, list):
             words = [words]
+        print("vay")
         for word in words:
-            game.update(add_to_set_words=word)
-        return True
+            game.update(add_to_set__words=word)
+        print("e")
+        return game
 
 
     # TODO: fix odd players edge-case.
