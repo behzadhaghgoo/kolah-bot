@@ -17,7 +17,8 @@ class Game(mongoengine.Document):
     remaining_words = mongoengine.ListField(mongoengine.StringField(), default=list)
     creator_id = mongoengine.IntField(required=True)
     status = mongoengine.StringField(default="Joining")
-
+    active_player_index = mongoengine.IntField(default=0)
+    current_word = mongoengine.StringField(default = "")
 
 class GameManager:
 
@@ -95,13 +96,16 @@ class GameManager:
 
     @staticmethod
     def get_random_word(game):
+        print("get_random_word")
         current_word = np.random.choice(list(game.remaining_words))
+        game.current_word = current_word
+        game.save()
         return current_word
 
     @staticmethod
     def reset(game):
-        game.remaining_words = game.words
-        game.save()
+        print("resetting")
+        game.update(set__remaining_words=game.words)
 
     @staticmethod
     def round_result(game, success, word, player):
