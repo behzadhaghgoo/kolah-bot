@@ -7,6 +7,7 @@ from bot.helpers import update_statuses, update_message
 reply_message = """توضیح این که بازی چطوریه"""
 
 def start_game(update, context):
+    context.bot.delete_message(update.effective_chat.id, update.message.message_id)
     print("salame man be to")
     games = Game.objects(creator_id = update.effective_chat.id, status__ne="Finished")
     print("yare ghadimi")
@@ -30,4 +31,3 @@ def start_game(update, context):
     print("sabooye may shekastam")
     # game.active_player_index = (game.active_player_index + 1) % len(game.players)
 
-    context.bot.delete_message(chat_id, update.message.message_id)

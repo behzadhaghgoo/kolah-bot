@@ -4,8 +4,10 @@ from bot.helpers import update_statuses, update_message
 
 
 def get_status(update, context):
-    print("get status")
     chat_id = update.effective_chat.id
+    context.bot.delete_message(chat_id, update.message.message_id)
+    print("get status")
+    
     games = Game.objects(players=chat_id, status__ne="Finished")
     player = Player.objects(chat_id=chat_id)[0]
 
@@ -13,7 +15,6 @@ def get_status(update, context):
     player.save()
 
     if len(games) == 0:
-        print("games:", len(games))
         update_message(context.bot, player, "فعلا تو بازی‌ای نیستی D:")
         return
 

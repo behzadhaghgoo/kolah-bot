@@ -1,20 +1,29 @@
 from .models.game import Game
 from .models.player import Player
-
+import telegram 
 joining_status = """
 بازیکنان فعال:
 %s
 """
 
 def update_message(telegram_bot, player, text):
+    print("salam")
+    menu_keyboard = [['/prev_player', '/next_player'], ['/correct']]
+    kb_markup = telegram.ReplyKeyboardMarkup(menu_keyboard, one_time_keyboard=True, resize_keyboard=True)
+    in_markup = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton("Previous Player", callback_data='1'), telegram.InlineKeyboardButton("Next Player", callback_data='2')],
+                                               [telegram.InlineKeyboardButton("Correct", callback_data='3')]])
+    print("dorood")
     if player.status_message_id is None:
+        
         print("creating new message")
-        message = telegram_bot.send_message(chat_id=player.chat_id, text=text, parse_mode="Markdown")
+        message = telegram_bot.send_message(chat_id=player.chat_id, text=text, parse_mode="Markdown") #, reply_markup=kb_markup)
         player.status_message_id = message.message_id
         player.save()
     else:
         print("editing message")
-        telegram_bot.edit_message_text(text, chat_id=player.chat_id, message_id=player.status_message_id, parse_mode="Markdown")
+        telegram_bot.edit_message_text(text, chat_id=player.chat_id, message_id=player.status_message_id) #, reply_markup=kb_markup)
+        # message = telegram_bot.send_message(chat_id=player.chat_id, text=text, reply_markup=kb_markup)
+        print("dorood")
 
 
 def update_statuses(telegram_bot, game):
@@ -55,14 +64,14 @@ def update_statuses(telegram_bot, game):
                              game.teams[game.active_player_index % (len(game.players)//2)].score)
         print("hame teshne labim", message)
         for ind, player in enumerate(players):
-            if ind != game.active_player_index:
+            if ind != (game.active_player_index) % len(game.players):
+                print("here", ind, game.active_player_index)
                 print("saghi kojaee")
                 update_message(telegram_bot, player, message)
             else: 
                 print("gereftare shabim")
                 special_message = """\n\n **کلمه: {}**""".format(game.current_word)
                 update_message(telegram_bot, player, message + special_message)
-        pass
 
     if game.status == "Finished":
         
