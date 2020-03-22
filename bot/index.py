@@ -1,4 +1,4 @@
-from telegram.ext import Updater, CommandHandler
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import mongoengine
 
 from .config import TELEGRAM_BOT_TOKEN
@@ -22,16 +22,16 @@ def run():
     dispatcher.add_handler(CommandHandler('new', create))
     dispatcher.add_handler(CommandHandler('assign_teams', assign_teams))
     dispatcher.add_handler(CommandHandler('start_getting_words', start_getting_words))
-    dispatcher.add_handler(CommandHandler('add_word', add_word))
+    # dispatcher.add_handler(CommandHandler('add_word', add_word))    
     dispatcher.add_handler(CommandHandler('get_status', get_status))    
     dispatcher.add_handler(CommandHandler('start_game', start_game))
     dispatcher.add_handler(CommandHandler('correct', correct))
     dispatcher.add_handler(CommandHandler('next_player', next_player))
     dispatcher.add_handler(CommandHandler('prev_player', prev_player))
     dispatcher.add_handler(CommandHandler('finish', finish))
+
+    dispatcher.add_handler(MessageHandler(Filters.text, add_word))
     
-
-
 
     # /start_getting_words -> can submitted by game creator only
     # /assign_teams -> creator only, show the teams afterwards
