@@ -1,4 +1,4 @@
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler
 import mongoengine
 
 from .config import TELEGRAM_BOT_TOKEN
@@ -12,6 +12,7 @@ from .handlers.start_game import start_game
 from .handlers.correct import correct
 from .handlers.next_player import next_player, prev_player
 from .handlers.finish import finish
+from .handlers.button import button
 
 def run():
     mongoengine.connect('kolah')
@@ -30,8 +31,14 @@ def run():
     dispatcher.add_handler(CommandHandler('prev_player', prev_player))
     dispatcher.add_handler(CommandHandler('finish', finish))
 
+    dispatcher.add_handler(CallbackQueryHandler(button))
+
     dispatcher.add_handler(MessageHandler(Filters.text, add_word))
     
+    # https://github.com/python-telegram-bot/python-telegram-bot/blob/master/examples/inlinekeyboard.py#L29
+    
+
+    # https://github.com/python-telegram-bot/python-telegram-bot/wiki/InlineKeyboard-Example
 
     # /start_getting_words -> can submitted by game creator only
     # /assign_teams -> creator only, show the teams afterwards

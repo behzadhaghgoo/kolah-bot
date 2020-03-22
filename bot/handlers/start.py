@@ -18,7 +18,12 @@ join_game_text = """
 
 
 def start(update, context):
-    context.bot.delete_message(update.effective_chat.id, update.message.message_id)
+    print("start")
+    try:
+        context.bot.delete_message(update.effective_chat.id, update.message.message_id)
+    except: 
+        pass
+
     chat_id = update.effective_chat.id
     name = str(update.effective_chat.first_name) + " " + str(update.effective_chat.last_name)
     players = Player.objects(chat_id=chat_id)

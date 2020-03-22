@@ -7,8 +7,14 @@ from bot.helpers import update_statuses, update_message
 reply_message = """توضیح این که بازی چطوریه"""
 
 def start_game(update, context):
-    context.bot.delete_message(update.effective_chat.id, update.message.message_id)
-    print("salame man be to")
+    print("start_game")
+    
+    try:
+        context.bot.delete_message(update.effective_chat.id, update.message.message_id)
+    except: 
+        pass 
+        
+    
     games = Game.objects(creator_id = update.effective_chat.id, status__ne="Finished")
     print("yare ghadimi")
     print(games)

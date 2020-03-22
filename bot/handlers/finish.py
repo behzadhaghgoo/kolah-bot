@@ -4,9 +4,13 @@ from bot.helpers import update_statuses, update_message
 
 
 def finish(update, context):
-    chat_id = update.effective_chat.id
-    context.bot.delete_message(chat_id, update.message.message_id)
     print("finish")
+    chat_id = update.effective_chat.id
+    try:
+        context.bot.delete_message(chat_id, update.message.message_id)
+    except:
+        pass
+    
     games = Game.objects(creator_id=chat_id, status__ne="Finished")
     print("nagoo nagoo nemiam")
     if len(games) == 0:
@@ -22,3 +26,4 @@ def finish(update, context):
     game.status = "Finished"
     game.save()
     game.reload()
+    update_statuses(game)

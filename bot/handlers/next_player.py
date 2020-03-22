@@ -3,8 +3,12 @@ from bot.models.player import Player
 from bot.helpers import update_statuses, update_message
 
 def next_player(update, context):
+    print("next_player")
     chat_id = update.effective_chat.id
-    context.bot.delete_message(chat_id, update.message.message_id)
+    try:
+        context.bot.delete_message(chat_id, update.message.message_id)
+    except: 
+        pass
     games = Game.objects(creator_id=chat_id, status__ne="Finished")
     print("nagoo nagoo nemiam")
     if len(games) == 0:
@@ -26,7 +30,12 @@ def next_player(update, context):
 
 
 def prev_player(update, context):
-    context.bot.delete_message(update.effective_chat.id, update.message.message_id)
+    print("prev_player")
+    try:
+        context.bot.delete_message(update.effective_chat.id, update.message.message_id)
+    except:
+        pass
+        
     chat_id = update.effective_chat.id
     games = Game.objects(creator_id=chat_id, status__ne="Finished")
     print("nagoo nagoo nemiam")

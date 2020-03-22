@@ -61,18 +61,14 @@ class GameManager:
         """
         Works both with a list or a single input
         """
-        print("add words")
         if isinstance(game, str):
             game = GameManager.get_game(game)
             if game is None:
                 return None
-        print("dorood")
         if not isinstance(words, list):
             words = [words]
-        print("vay")
         for word in words:
             game.update(add_to_set__words=word)
-        print("e")
         return game
 
 
@@ -96,7 +92,6 @@ class GameManager:
 
     @staticmethod
     def get_random_word(game):
-        print("get_random_word")
         current_word = np.random.choice(list(game.remaining_words))
         game.current_word = current_word
         game.save()

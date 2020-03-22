@@ -7,6 +7,11 @@ http://t.me/kolah_game_bot?start=%s
 
 
 def create(update, context):
+    try:
+        context.bot.delete_message(update.effective_chat.id, update.message.message_id)
+    except: 
+        pass 
+
     creator_id = update.effective_chat.id
     game_id = GameManager.create_game(creator_id)
     GameManager.add_player(game_id, creator_id)
