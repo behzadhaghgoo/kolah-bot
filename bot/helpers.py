@@ -13,7 +13,7 @@ def update_message(telegram_bot, player, text, keyboard = None):
     in_markup = None
     if keyboard:
         in_markup = telegram.InlineKeyboardMarkup([[telegram.InlineKeyboardButton(element, callback_data=element) for element in key_array] for key_array in keyboard])
-    print("keyboard:", keyboard)
+    print("keyboard:", in_markup)
     if player.status_message_id is None:
         print("creating new message for", player.name)
         message = telegram_bot.send_message(chat_id=player.chat_id, text=text, parse_mode="Markdown", reply_markup=in_markup)
@@ -44,11 +44,11 @@ def update_statuses(telegram_bot, game):
     if game.status == "Team Assignment":
         teams_str = ""
         for i, team in enumerate(game.teams):
-            teams_str += "team {}: {} - {} \n".format(i, players_dict[team.players[0]].name, players_dict[team.players[1]].name)
+            teams_str += "team {}: {} - {} : {} points \n".format(i, players_dict[team.players[0]].name, players_dict[team.players[1]].name, team.score)
         for player in players:
             keyboard = None
             if player.chat_id == game.creator_id:
-                keyboard = [['Start Game']]
+                keyboard = [['Start Round']]
             update_message(telegram_bot, player, teams_str, keyboard)
             
     if game.status == "Getting Words":
@@ -60,6 +60,28 @@ def update_statuses(telegram_bot, game):
                 keyboard = [['Assign Teams']]
             update_message(telegram_bot, player, message, keyboard)
 
+    if game.status == "Waiting":
+
+        curr_player_keyboard = [['Start Explaining']]
+        admin_keyboard = [['Prev Player','Next Player']]
+        
+        message = """منتطرِ: {}""".format(players_dict[game.players[game.active_player_index]].name)
+
+        for ind, player in enumerate(game.players):
+            if ind != (game.active_player_index % len(game.players)):
+                if player == game.creator_id:
+                    update_message(telegram_bot, players_dict[player], message, admin_keyboard)
+                else:
+                    update_message(telegram_bot, players_dict[player], message)
+            else: 
+                special_message = """\n\n **نوبت توئه!**"""
+                if player == game.creator_id:
+                    update_message(telegram_bot, players_dict[player], message + special_message, curr_player_keyboard + admin_keyboard)
+                else:
+                    update_message(telegram_bot, players_dict[player], message + special_message, curr_player_keyboard)
+
+
+
     if game.status == "Playing":
         print("hame teshne labim", game.active_player_index)
         print(players_dict[game.players[game.active_player_index]].name)
@@ -70,9 +92,8 @@ def update_statuses(telegram_bot, game):
                   """.format(players_dict[game.players[game.active_player_index]].name, 
                              players_dict[game.players[(game.active_player_index + len(game.players)//2) % len(game.players)]].name,
                              game.teams[game.active_player_index % (len(game.players)//2)].score)
-        
-        print("hame teshne labim", message)
-        curr_player_keyboard = [['correct']]
+        print("message", message)
+        curr_player_keyboard = [['Correct']]
         admin_keyboard = [['Prev Player','Next Player']]
         for ind, player in enumerate(game.players):
             if ind != (game.active_player_index % len(game.players)):

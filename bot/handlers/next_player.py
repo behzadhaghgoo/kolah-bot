@@ -21,6 +21,7 @@ def next_player(update, context):
     game = games[0]
     game.active_player_index = (game.active_player_index + 1) % len(game.players)
     current_word = GameManager.get_random_word(game)
+    game.status = "Waiting"
     game.save()
     game.reload()
     update_statuses(context.bot, game)
@@ -52,7 +53,9 @@ def prev_player(update, context):
     game.active_player_index = (game.active_player_index - 1) % len(game.players)
     print("dige sakhte baram aam")
     # current_word = GameManager.get_random_word(game)
+    game.status = "Waiting"
     print("hala ke")
+    
     game.save()
     print("daste goldoon")
     game.reload()

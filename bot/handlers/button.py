@@ -8,6 +8,7 @@ from .start_game import start_game
 from .correct import correct
 from .next_player import next_player, prev_player
 from .finish import finish
+from .start_turn import start_turn
 
 def button(update, context):
     print("button pressed")
@@ -15,11 +16,11 @@ def button(update, context):
     print("data", data)
     if data == 'Start Getting Words':
         start_getting_words(update, context)
-    elif data == 'Start Game':
+    elif data == 'Start Round':
         start_game(update, context)
     elif data == 'Assign Teams':
         assign_teams(update, context)
-    elif data == 'correct':
+    elif data == 'Correct':
         correct(update, context)
     elif data == 'Next Player':
         next_player(update, context)
@@ -27,6 +28,8 @@ def button(update, context):
         prev_player(update, context)
     elif data == 'New Game':
         create(update, context)
+    elif data == 'Start Explaining':
+        start_turn(update, context)
 
     return
 

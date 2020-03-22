@@ -26,4 +26,4 @@ def finish(update, context):
     game.status = "Finished"
     game.save()
     game.reload()
-    update_statuses(game)
+    update_statuses(context.bot, game)

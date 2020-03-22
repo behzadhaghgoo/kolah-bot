@@ -28,7 +28,10 @@ def correct(update, context):
         game.save()
         game.update(pull__remaining_words=game.current_word)
         game.reload()
-        GameManager.get_random_word(game)
+        try:
+            GameManager.get_random_word(game)
+        except:
+            game.status = "Team Assignment"
     game.save()
     game.reload()
     update_statuses(context.bot, game)

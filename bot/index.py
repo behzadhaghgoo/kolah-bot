@@ -13,6 +13,7 @@ from .handlers.correct import correct
 from .handlers.next_player import next_player, prev_player
 from .handlers.finish import finish
 from .handlers.button import button
+from .handlers.start_turn import start_turn
 
 def run():
     mongoengine.connect('kolah')
@@ -26,6 +27,7 @@ def run():
     # dispatcher.add_handler(CommandHandler('add_word', add_word))    
     dispatcher.add_handler(CommandHandler('get_status', get_status))    
     dispatcher.add_handler(CommandHandler('start_game', start_game))
+    dispatcher.add_handler(CommandHandler('start_turn', start_turn))
     dispatcher.add_handler(CommandHandler('correct', correct))
     dispatcher.add_handler(CommandHandler('next_player', next_player))
     dispatcher.add_handler(CommandHandler('prev_player', prev_player))
