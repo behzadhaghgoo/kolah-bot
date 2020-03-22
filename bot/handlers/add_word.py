@@ -15,4 +15,3 @@ def add_word(update, context):
     if word != "":
         game = GameManager.add_words(game, word)
         update_statuses(context.bot, game)
-
