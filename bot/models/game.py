@@ -19,6 +19,8 @@ class Game(mongoengine.Document):
     status = mongoengine.StringField(default="Joining")
     active_player_index = mongoengine.IntField(default=0)
     current_word = mongoengine.StringField(default = "")
+    active_round = mongoengine.IntField(default=0)
+    rounds_timeout = mongoengine.ListField(mongoengine.IntField(), default=[30,15,25])
 
 class GameManager:
 
@@ -68,7 +70,7 @@ class GameManager:
         if not isinstance(words, list):
             words = [words]
         for word in words:
-            game.update(add_to_set__words=word)
+            game.update(add_to_set__words=word, add_to_set__remaining_words=word)
         return game
 
 
@@ -101,7 +103,7 @@ class GameManager:
     @staticmethod
     def reset(game):
         print("resetting")
-        game.update(set__remaining_words=game.words)
+        game.update(set__remaining_words=game.words, inc__active_round=1)
 
     @staticmethod
     def round_result(game, success, word, player):

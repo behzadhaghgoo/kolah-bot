@@ -30,6 +30,8 @@ def button(update, context):
         create(update, context)
     elif data == 'Start Explaining':
         start_turn(update, context)
+    elif data == 'Finish Game':
+        finish(update, context)
 
     return
 

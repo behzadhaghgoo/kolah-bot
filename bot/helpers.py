@@ -2,7 +2,7 @@ from .models.game import Game
 from .models.player import Player
 import telegram 
 joining_status = """
-بازیکنان فعال:
+**Active Players:**
 %s
 """
 
@@ -35,11 +35,18 @@ def update_statuses(telegram_bot, game):
 
     active_players_text = "\n".join(["%d.%s" % (index + 1, player.name) for index, player in enumerate(players)])
     if game.status == "Joining":
+
+        reply_message = """
+        The game is created, add players by sharing this message with them. \n\n[Join](http://t.me/kolah_game_bot?start=%s)
+        """
+
+        #  % game_id
+
         for player in game.players:
             keyboard = None
             if player == game.creator_id:
                 keyboard = [['Start Getting Words']]
-            update_message(telegram_bot, players_dict[player], joining_status % active_players_text, keyboard)
+            update_message(telegram_bot, players_dict[player],(reply_message % game.id) + "" + (joining_status % active_players_text), keyboard)
 
     if game.status == "Team Assignment":
         teams_str = ""
@@ -48,7 +55,13 @@ def update_statuses(telegram_bot, game):
         for player in players:
             keyboard = None
             if player.chat_id == game.creator_id:
-                keyboard = [['Start Round']]
+                keyboard = []
+                if game.active_round == 0:
+                    keyboard.append(['Assign Teams'])
+                if game.active_round < len(game.rounds_timeout):
+                    keyboard.append(['Start Round'])
+                else: 
+                    keyboard.append(['Finish Game'])
             update_message(telegram_bot, player, teams_str, keyboard)
             
     if game.status == "Getting Words":

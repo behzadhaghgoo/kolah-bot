@@ -31,9 +31,8 @@ def correct(update, context):
         try:
             GameManager.get_random_word(game)
         except:
+            GameManager.reset(game)
             game.status = "Team Assignment"
     game.save()
     game.reload()
     update_statuses(context.bot, game)
-
-    context.bot.delete_message(chat_id, update.message.message_id)

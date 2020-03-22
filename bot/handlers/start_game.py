@@ -27,7 +27,7 @@ def start_game(update, context):
     print("havadare ghadimi")
     game.status = "Waiting"
     game.save()
-    GameManager.reset(game)
+    # GameManager.reset(game)
     print("hanooz hamoon")
     game.reload()
     print("kharabatio mastam")

@@ -1,9 +1,6 @@
-from bot.models.game import GameManager
+from bot.models.game import GameManager, Game
+from bot.helpers import update_statuses
 
-reply_message = """
-یه بازی جدید ساخته شد، برای اینکه باقی بچه‌ها هم جوین بشن، این لینک رو باهاشون به اشتراک بذار ;)
-http://t.me/kolah_game_bot?start=%s
-"""
 
 
 def create(update, context):
@@ -13,7 +10,11 @@ def create(update, context):
         pass 
 
     creator_id = update.effective_chat.id
+    if len(Game.objects(players=creator_id, status__ne="Finished")) != 0:
+        return
+
     game_id = GameManager.create_game(creator_id)
-    GameManager.add_player(game_id, creator_id)
-    context.bot.send_message(chat_id=creator_id, text=reply_message % game_id)
+    res, game = GameManager.add_player(game_id, creator_id)
+    update_statuses(context.bot, game)
+    # context.bot.send_message(chat_id=creator_id, text=reply_message % game_id)
     
