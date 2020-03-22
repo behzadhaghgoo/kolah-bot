@@ -76,9 +76,9 @@ def update_statuses(telegram_bot, game):
             else: 
                 special_message = """\n\n **نوبت توئه!**"""
                 if player == game.creator_id:
-                    update_message(telegram_bot, players_dict[player], message + special_message, curr_player_keyboard + admin_keyboard)
+                    update_message(telegram_bot, players_dict[player], special_message, curr_player_keyboard + admin_keyboard)
                 else:
-                    update_message(telegram_bot, players_dict[player], message + special_message, curr_player_keyboard)
+                    update_message(telegram_bot, players_dict[player], special_message, curr_player_keyboard)
 
 
 
